@@ -1,0 +1,45 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <div class = "logo-container">
+        <!-- Company Logo -->
+        <img src="~/images/LinkedInCoverPage.png" alt="Company Logo" class="center"/>
+    </div>
+    <h1 style="font-size: 29px; margin-bottom: 22px">Sign In</h1>
+    <form method="post">
+        <!-- Credentials -->
+        <input type="text" placeholder="Username" id="username" name="username" style="width: 300px; height: 30px; margin: 10px;"/>
+        <br />
+        <input type="password" placeholder="Password" id="password" name="password" style="width: 300px; height: 30px; margin: 10px;"/>
+        <br />
+
+        <!-- Submit Button -->
+        <button style="width: 100px; height: 30px; margin: 10px;">Submit</button>
+        <button class="purple-button">Submit Dumb Dumb</button>
+    </form>
+</div>
+
+<style>
+    .purple-button {
+    border-radius: 3px;
+    background-color: rgb(81, 40, 136);
+    color: white;
+    text-align: center;
+    border: 0;
+    display: block;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    width: 230px;
+    height: 47px;
+    font-size: 18px;
+
+    .logo-container {
+        margin-bottom: 20px; /* Space below the logo */
+    }
+}
+</style>
