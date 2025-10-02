@@ -4,7 +4,7 @@ hello
 
 🚀 Sudo Slayer Noah Repo
 
-Hey guys, it’s me, Sudo Slayer Noah. I am absolutely STOKED to get started on this repo! This project is where I’ll be building, experimenting, and sharing code, ideas, and tools that I’m working on.
+Hey guys, it’s me, not Sudo Slayer Noah. I am absolutely STOKED to get started on this repo! This project is where I’ll be building, experimenting, and sharing code, ideas, and tools that I’m working on.
 
 📖 Overview
 
