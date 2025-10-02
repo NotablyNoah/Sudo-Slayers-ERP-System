@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jacob\\MIS Cloud Comp\\ERP Project\\RXERP\\RXERP.csproj": {}
+    "/Users/noahsmacbook/Documents/GitHub/Sudo-Slayers-ERP-System/RXERP/RXERP.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jacob\\MIS Cloud Comp\\ERP Project\\RXERP\\RXERP.csproj": {
+    "/Users/noahsmacbook/Documents/GitHub/Sudo-Slayers-ERP-System/RXERP/RXERP.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jacob\\MIS Cloud Comp\\ERP Project\\RXERP\\RXERP.csproj",
+        "projectUniqueName": "/Users/noahsmacbook/Documents/GitHub/Sudo-Slayers-ERP-System/RXERP/RXERP.csproj",
         "projectName": "RXERP",
-        "projectPath": "C:\\Users\\jacob\\MIS Cloud Comp\\ERP Project\\RXERP\\RXERP.csproj",
-        "packagesPath": "C:\\Users\\jacob\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jacob\\MIS Cloud Comp\\ERP Project\\RXERP\\obj\\",
+        "projectPath": "/Users/noahsmacbook/Documents/GitHub/Sudo-Slayers-ERP-System/RXERP/RXERP.csproj",
+        "packagesPath": "/Users/noahsmacbook/.nuget/packages/",
+        "outputPath": "/Users/noahsmacbook/Documents/GitHub/Sudo-Slayers-ERP-System/RXERP/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\jacob\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/noahsmacbook/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -64,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
