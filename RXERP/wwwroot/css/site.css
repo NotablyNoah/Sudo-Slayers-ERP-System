@@ -20,3 +20,35 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* HRM cards layout: show cards in a row on wide screens and wrap on small screens */
+.cards {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+.card {
+  background-color: #f8f9fa;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  flex: 1 1 200px; /* grow, shrink, base width */
+  min-width: 180px;
+  text-align: center;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+@media (min-width: 1024px) {
+  /* On large screens keep cards at a consistent height */
+  .card { min-height: 80px; display: flex; align-items: center; justify-content: center; }
+}
