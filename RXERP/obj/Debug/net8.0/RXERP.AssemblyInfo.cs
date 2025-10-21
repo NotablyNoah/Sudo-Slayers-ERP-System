@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RXERP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ae763cc516ec8d51f5222913b9b0ae4aeab2b67")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f3050404ec26e76cae9804ef71fe03ce53a625b")]
 [assembly: System.Reflection.AssemblyProductAttribute("RXERP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RXERP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
