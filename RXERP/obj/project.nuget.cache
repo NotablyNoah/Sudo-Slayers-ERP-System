@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "pPRqt670Jg0=",
+  "dgSpecHash": "ysDheqLlxLU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\jacob\\MIS Cloud Comp\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Tanner Duke\\OneDrive\\Documents\\GitHub\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Tanner Duke\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.19\\microsoft.netcore.app.ref.8.0.19.nupkg.sha512",
+    "C:\\Users\\Tanner Duke\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.19\\microsoft.windowsdesktop.app.ref.8.0.19.nupkg.sha512",
+    "C:\\Users\\Tanner Duke\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.19\\microsoft.aspnetcore.app.ref.8.0.19.nupkg.sha512",
+    "C:\\Users\\Tanner Duke\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.19\\microsoft.netcore.app.host.win-x64.8.0.19.nupkg.sha512"
+  ],
   "logs": []
 }

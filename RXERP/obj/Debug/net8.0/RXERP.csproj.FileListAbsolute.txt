@@ -59,3 +59,36 @@ C:\Users\jacob\MIS Cloud Comp\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\ref
 C:\Users\jacob\MIS Cloud Comp\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.pdb
 C:\Users\jacob\MIS Cloud Comp\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.genruntimeconfig.cache
 C:\Users\jacob\MIS Cloud Comp\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\ref\RXERP.dll
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\appsettings.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\RXERP.staticwebassets.runtime.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\RXERP.staticwebassets.endpoints.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\RXERP.exe
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\RXERP.deps.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\RXERP.runtimeconfig.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\RXERP.dll
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\bin\Debug\net8.0\RXERP.pdb
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.AssemblyInfoInputs.cache
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.AssemblyInfo.cs
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.csproj.CoreCompileInputs.cache
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.RazorAssemblyInfo.cache
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.RazorAssemblyInfo.cs
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.sourcelink.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\scopedcss\bundle\RXERP.styles.css
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\scopedcss\projectbundle\RXERP.bundle.scp.css
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.dll
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\refint\RXERP.dll
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.pdb
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\RXERP.genruntimeconfig.cache
+C:\Users\Tanner Duke\OneDrive\Documents\GitHub\Sudo-Slayers-ERP-System\RXERP\obj\Debug\net8.0\ref\RXERP.dll
