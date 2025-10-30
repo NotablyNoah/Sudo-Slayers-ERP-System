@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Tanner Duke\\OneDrive\\Documents\\GitHub\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj": {}
+    "C:\\Users\\jacob\\MIS Cloud Comp\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Tanner Duke\\OneDrive\\Documents\\GitHub\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj": {
+    "C:\\Users\\jacob\\MIS Cloud Comp\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tanner Duke\\OneDrive\\Documents\\GitHub\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj",
+        "projectUniqueName": "C:\\Users\\jacob\\MIS Cloud Comp\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj",
         "projectName": "RXERP",
-        "projectPath": "C:\\Users\\Tanner Duke\\OneDrive\\Documents\\GitHub\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj",
-        "packagesPath": "C:\\Users\\Tanner Duke\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tanner Duke\\OneDrive\\Documents\\GitHub\\Sudo-Slayers-ERP-System\\RXERP\\obj\\",
+        "projectPath": "C:\\Users\\jacob\\MIS Cloud Comp\\Sudo-Slayers-ERP-System\\RXERP\\RXERP.csproj",
+        "packagesPath": "C:\\Users\\jacob\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jacob\\MIS Cloud Comp\\Sudo-Slayers-ERP-System\\RXERP\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Tanner Duke\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jacob\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,12 +40,29 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -56,24 +74,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.19, 8.0.19]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.19, 8.0.19]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -82,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

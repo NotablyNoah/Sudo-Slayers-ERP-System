@@ -1,7 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using RXERP.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+
+// connect AppDbContext to database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// this step means we are configuring the de
+// AddDbContext service to use MySQL with the specified connection string
+builder.Services.AddDbContext<AppDbContent>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+);
+
+//save values in Session HttpContext
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -20,6 +36,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+//enable session middleware
+app.UseSession();
 app.MapRazorPages();
 
 app.Run();

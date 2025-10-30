@@ -1,0 +1,27 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="text-center">
+    <h1>Create a new account</h1>
+    <form method="post">
+        <!-- Credentials -->
+        <input type="text" placeholder="Email" id="Email" name="Email" required style="width: 300px; height: 30px; margin: 10px;"/>
+        <br />
+        <input type="password" placeholder="Password" id="Password" name="Password" required style="width: 300px; height: 30px; margin: 10px;"/>
+        <br />
+        <input type="password" placeholder="Confirm Password" id="ConfirmPassword" name="ConfirmPassword" required style="width: 300px; height: 30px; margin: 10px;"/>
+        <br />
+
+        <label>Role: </label>
+        <select id="role" name="role" required style="width: 150px; height: 30px; margin: 10px;">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+        </select>
+
+        <!-- Register Button -->
+        <button type="submit" style="width: 100px; height: 30px; margin: 10px;">Submit</button>
+    </form>
+</div>
