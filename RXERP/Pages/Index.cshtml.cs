@@ -45,15 +45,27 @@ public class IndexModel : PageModel
         var user = await _db.UserCredentials
             .FirstOrDefaultAsync(u => u.Email == UserCredentials.Email && u.Password == UserCredentials.Password);
 
-        if (user != null && user.Role == "Admin")
+        if (user != null)
         {
-            // User is authenticated and is an admin
-            return RedirectToPage("/HRM");
-        }
-        else if (user != null && user.Role == "User")
-        {
-            // User is authenticated and is a regular user
-            return RedirectToPage("/Privacy");
+            // Store user role in session
+            HttpContext.Session.SetString("UserRole", user.Role);
+
+            if (user.Role == "Admin")
+            {
+                // User is authenticated and is an admin
+                return RedirectToPage("/HRM");
+            }
+            else if (user.Role == "User")
+            {
+                // User is authenticated and is a regular user
+                return RedirectToPage("/Privacy");
+            }
+            else
+            {
+                // user is some other role, error should not happen
+                ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                return Page();
+            }
         }
         else
         {
