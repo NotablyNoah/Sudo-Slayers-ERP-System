@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RXERP.Data;
+using RXERP.Pages;
 
 namespace RXERP.Data // namespace declaration to match file path
 {
@@ -22,5 +23,10 @@ namespace RXERP.Data // namespace declaration to match file path
         public DbSet<UserCredentials> UserCredentials { get; set; }
         //public DbSet<Employee> Employees { get; set; }    
         //for FUTURE tableset, will need another Employee.cs page in the data folder
+
+        public DbSet<VendorData> VendorData { get; set; }
+
+
+        public DbSet<EmployeeData> EmployeeData { get; set; }
     }
 }

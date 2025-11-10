@@ -45,7 +45,8 @@ public class IndexModel : PageModel
         var user = await _db.UserCredentials
             .FirstOrDefaultAsync(u => u.Email == UserCredentials.Email && u.Password == UserCredentials.Password);
 
-        if (user != null)
+        if (user != null) //////////////// switch to switch not if statement
+        // amind = hrm hr = hr vendor = vendormgmt defualt privacy
         {
             // Store user role in session
             HttpContext.Session.SetString("UserRole", user.Role);
@@ -53,7 +54,7 @@ public class IndexModel : PageModel
             if (user.Role == "Admin")
             {
                 // User is authenticated and is an admin
-                return RedirectToPage("/HRM");
+                return RedirectToPage("/Vendormgmt");
             }
             else if (user.Role == "User")
             {

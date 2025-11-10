@@ -1,0 +1,170 @@
+@page
+@model RXERP.Pages.VendormgmtModel
+@{
+    ViewData["Title"] = "Vendor Management";
+}
+
+<h1 class="mb-3">Vendor Management</h1>
+
+<!-- Summary cards -->
+<section class="d-flex flex-wrap gap-3 mb-4">
+    <div class="card p-3" style="min-width:160px;">
+        <div class="h3 mb-0">@Model.TotalVendors</div>
+        <small class="text-muted">Total Vendors</small>
+    </div>
+    <div class="card p-3" style="min-width:160px;">
+        <div class="h3 mb-0">@Model.ActiveVendors</div>
+        <small class="text-muted">Active Vendors</small>
+    </div>
+    <div class="card p-3" style="min-width:160px;">
+        <div class="h3 mb-0">@Model.AvgRating</div>
+        <small class="text-muted">Average Rating</small>
+    </div>
+    <div class="card p-3" style="min-width:160px;">
+        <div class="h3 mb-0">@Model.WithFiles</div>
+        <small class="text-muted">Vendors with Files</small>
+    </div>
+</section>
+
+<!-- Messages -->
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<!-- Add / Edit vendor form -->
+<section class="card mb-4 p-3">
+    <h4>@(Model.Vendor?.Vendor_ID == 0 ? "Add Vendor" : $"Edit Vendor #{Model.Vendor.Vendor_ID}")</h4>
+
+    <form method="post" asp-page-handler="Save" enctype="multipart/form-data" class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Vendor.Vendor_Name" class="form-label">Vendor Name *</label>
+            <input asp-for="Vendor.Vendor_Name" class="form-control" />
+            <span asp-validation-for="Vendor.Vendor_Name" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Vendor.Contact_Person" class="form-label">Contact Person</label>
+            <input asp-for="Vendor.Contact_Person" class="form-control" />
+            <span asp-validation-for="Vendor.Contact_Person" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Vendor.Email" class="form-label">Email *</label>
+            <input asp-for="Vendor.Email" class="form-control" />
+            <span asp-validation-for="Vendor.Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="Vendor.Vendor_Type" class="form-label">Vendor Type</label>
+            <input asp-for="Vendor.Vendor_Type" class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="Vendor.Status" class="form-label">Status *</label>
+            <select asp-for="Vendor.Status" class="form-select">
+                <option value="active">active</option>
+                <option value="inactive">inactive</option>
+            </select>
+            <span asp-validation-for="Vendor.Status" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-2">
+            <label asp-for="Vendor.Rating" class="form-label">Rating</label>
+            <input asp-for="Vendor.Rating" type="number" step="0.1" min="0" max="5" class="form-control" />
+        </div>
+
+        <div class="col-md-5">
+            <label class="form-label">Photo (upload)</label>
+            <input asp-for="PhotoUpload" type="file" class="form-control" />
+        </div>
+
+        <div class="col-md-5">
+            <label class="form-label">Document (upload)</label>
+            <input asp-for="DocumentUpload" type="file" class="form-control" />
+        </div>
+
+        <div class="col-12">
+            <input asp-for="Vendor.Vendor_ID" type="hidden" />
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-page="./Vendormgmt" class="btn btn-secondary ms-2">New</a>
+        </div>
+    </form>
+
+    <div asp-validation-summary="All" class="text-danger mt-2"></div>
+</section>
+
+<!-- Vendors table -->
+<section>
+    <h4>Vendors</h4>
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Rating</th>
+                <th>Files</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th style="white-space:nowrap;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Vendors?.Any() != true)
+            {
+                <tr><td colspan="11" class="text-center">No vendors found.</td></tr>
+            }
+            else
+            {
+                foreach (var v in Model.Vendors)
+                {
+                    <tr>
+                        <td>@v.Vendor_ID</td>
+                        <td>@v.Vendor_Name</td>
+                        <td>@v.Contact_Person</td>
+                        <td>@v.Email</td>
+                        <td>@v.Vendor_Type</td>
+                        <td>@v.Status</td>
+                        <td>@(v.Rating?.ToString("0.0") ?? "-")</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(v.PhotoFileName))
+                            {
+                                <div>@v.PhotoFileName</div>
+                            }
+                            @if (!string.IsNullOrEmpty(v.DocumentFileName))
+                            {
+                                <div>@v.DocumentFileName</div>
+                            }
+                        </td>
+                        <td>@(v.Created_At.ToString("yyyy-MM-dd"))</td>
+                        <td>@(v.Updated_At.ToString("yyyy-MM-dd"))</td>
+                        <td>
+                            <a asp-page="./Vendormgmt" asp-route-id="@v.Vendor_ID" class="btn btn-sm btn-outline-primary">Edit</a>
+
+                            <form method="post" asp-page-handler="Delete" class="d-inline" onsubmit="return confirm('Delete vendor @v.Vendor_Name?');">
+                                <input type="hidden" name="id" value="@v.Vendor_ID" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger ms-1">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
