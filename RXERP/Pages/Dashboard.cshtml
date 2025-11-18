@@ -1,0 +1,32 @@
+@page
+@model RXERP.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Welcome to the Dashboard</h1>
+
+<!-- HRM CARD -->
+<a asp-page = "/HRM" style="text-decoration: none;">
+    <div class= "card" style="width: 300px; height: 150px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <h2 class="card-title" style="color: #007bff;">Human Resource Management</h2>
+        <p style="color: #555;">Manage employee records, attendance, and payroll.</p>
+    </div>
+</a>
+
+<!-- Vendor CARD -->
+<a asp-page = "/VendorMgmt" style="text-decoration: none;">
+    <div class= "card" style="width: 300px; height: 150px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <h2 class="card-title" style="color: #007bff;">Vendor Management Module</h2>
+        <p style="color: #555;">Access Vendormgmt fatures</p>
+    </div>
+</a>
+
+<style>
+.card{
+    display: inline-block;
+    margin: 10px;
+    transition: transform 0.2s;
+    
+}
+</style>

@@ -32,6 +32,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Dashboard">Dashboard</a>
+                        </li>
                         @if (isAdmin) //if user is admin, show HRM link
                         {
                         <li class="nav-item">
@@ -39,6 +42,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Vendormgmt">Vendor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Financial">Financial</a>
                         </li>
                         }
                         <li class="nav-item">

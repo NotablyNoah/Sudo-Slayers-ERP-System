@@ -28,5 +28,12 @@ namespace RXERP.Data // namespace declaration to match file path
 
 
         public DbSet<EmployeeData> EmployeeData { get; set; }
+
+        //Financial Data Tables
+        public DbSet<FinancialDataInvoice> FinanceDataInvoices { get; set; }
+        public DbSet<FinancialDataInvoiceLine> FinanceDataInvoiceLines { get; set; }
+        public DbSet<FinancialDataJournal> FinancialDataJournals { get; set; }
+        public DbSet<FinancialDataJournalLine> FinancialDataJournalLines { get; set; }
+        public DbSet<FinancialDataPayment> FinancialDataPayments { get; set; }
     }
 }
