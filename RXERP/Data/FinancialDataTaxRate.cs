@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RXERP.Data
 {
-    [Table("tax_rates")]
+    [Table("finance_taxrates")]
     [Index(nameof(Code), Name = "idx_taxrates_code")]
     [Index(nameof(Region), Name = "idx_taxrates_region")]
     public class FinancialDataTaxRate

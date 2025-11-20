@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RXERP.Data
 {
-    [Table("financial_journal_lines")]
+    [Table("finance_journal_lines")]
     [Index(nameof(Journal_ID), Name = "idx_fin_journal_lines_journal")]
     public class FinancialDataJournalLine
     {

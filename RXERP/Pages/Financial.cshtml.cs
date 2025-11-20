@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RXERP.Data;
@@ -19,180 +17,122 @@ namespace RXERP.Pages
             _db = db;
         }
 
-        // Invoice lines shown in the table (loaded from DB)
-        public List<FinancialDataInvoiceLine> Lines { get; set; } = new List<FinancialDataInvoiceLine>();
+        // Loaded tables
+        public List<FinancialDataInvoice> Invoices { get; set; } = new();
+        public List<FinancialDataInvoiceLine> InvoiceLines { get; set; } = new();
+        public List<FinancialDataJournal> Journals { get; set; } = new();
+        public List<FinancialDataJournalLine> JournalLines { get; set; } = new();
+        public List<FinancialDataPayment> Payments { get; set; } = new();
 
-        // Bound model for Add / Edit form (server-side)
-        [BindProperty]
-        public FinancialLineInput LineInput { get; set; } = new FinancialLineInput();
+        // Summary values for cards
+        public int InvoiceCount { get; set; }
+        public int PaymentCount { get; set; }
+        public decimal TotalInvoiced { get; set; }
+        public decimal TotalRevenue { get; set; }
+        public decimal Outstanding { get; set; }
 
-        // Optional filter (supports GET)
-        [BindProperty(SupportsGet = true)]
-        public int? FilterInvoiceId { get; set; }
+        // Vendors owing (basic DTO)
+        public List<VendorOwingDto> VendorsOwing { get; set; } = new();
 
-        // Summary values computed from Lines
-        public int TotalLines => Lines?.Count ?? 0;
-        public decimal SubtotalTotal => Math.Round(Lines?.Sum(l => l.Line_Subtotal) ?? 0m, 2);
-        public decimal TaxTotal => Math.Round(Lines?.Sum(l => l.Tax_Amount) ?? 0m, 2);
-        public decimal GrandTotal => Math.Round(Lines?.Sum(l => l.Line_Total) ?? 0m, 2);
-
-        // GET: Load invoice lines optionally filtered by invoice id
-        public async Task<IActionResult> OnGetAsync(int? invoiceId)
+        public async Task OnGetAsync()
         {
-            // Optional: keep existing role check if you want to restrict access
-            var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" && userRole != "Finance" && userRole != "Vendor")
+            // Load sequentially (recommended for simplicity and reliability)
+            await LoadInvoicesAsync();
+            await LoadInvoiceLinesAsync();
+            await LoadJournalsAsync();
+            await LoadJournalLinesAsync();
+            await LoadPaymentsAsync();
+
+            // Compute simple summaries for the cards
+            InvoiceCount = Invoices.Count;
+            PaymentCount = Payments.Count;
+            TotalInvoiced = Math.Round(Invoices.Sum(i => i.Total_Amount), 2);
+            TotalRevenue = Math.Round(Payments.Sum(p => p.Amount_Total), 2);
+            Outstanding = Math.Round(TotalInvoiced - TotalRevenue, 2);
+
+            // Compute vendors owing (in-memory from loaded lists)
+            var invoiceSums = Invoices
+                .GroupBy(i => i.Vendor_ID)
+                .Select(g => new { Vendor_ID = g.Key, Invoiced = g.Sum(x => x.Total_Amount) });
+
+            var paymentSums = Payments
+                .GroupBy(p => p.Vendor_ID)
+                .Select(g => new { Vendor_ID = g.Key, Paid = g.Sum(x => x.Amount_Total) });
+
+            var join = from inv in invoiceSums
+                       join pay in paymentSums on inv.Vendor_ID equals pay.Vendor_ID into payg
+                       from pay in payg.DefaultIfEmpty()
+                       select new
+                       {
+                           Vendor_ID = inv.Vendor_ID,
+                           Invoiced = inv.Invoiced,
+                           Paid = pay?.Paid ?? 0m,
+                           Outstanding = inv.Invoiced - (pay?.Paid ?? 0m)
+                       };
+
+            var oweList = join.Where(x => x.Outstanding > 0).OrderByDescending(x => x.Outstanding).ToList();
+
+            VendorsOwing = oweList.Select(x => new VendorOwingDto
             {
-                TempData["ErrorMessage"] = "Access denied. Admins/Finance/Vendors only.";
-                return RedirectToPage("/Index");
+                Vendor_ID = x.Vendor_ID,
+                Vendor_Name = "(vendor)",
+                InvoicedTotal = Math.Round(x.Invoiced, 2),
+                PaidTotal = Math.Round(x.Paid, 2),
+                Outstanding = Math.Round(x.Outstanding, 2)
+            }).ToList();
+
+            // Resolve vendor names via VendorData table if present
+            var vendorIds = VendorsOwing.Select(v => v.Vendor_ID).Distinct().ToList();
+            if (vendorIds.Any())
+            {
+                var vendors = await _db.Set<VendorData>()
+                    .AsNoTracking()
+                    .Where(v => vendorIds.Contains(v.Vendor_ID))
+                    .ToDictionaryAsync(v => v.Vendor_ID, v => v.Vendor_Name);
+
+                foreach (var vo in VendorsOwing)
+                    vo.Vendor_Name = vendors.TryGetValue(vo.Vendor_ID, out var n) ? n : "(vendor)";
             }
-
-            if (invoiceId.HasValue)
-                FilterInvoiceId = invoiceId.Value;
-
-            await LoadLinesAsync();
-            return Page();
         }
 
-        // POST: Add a new invoice line
-        public async Task<IActionResult> OnPostAddLineAsync()
+        private async Task LoadInvoicesAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                await LoadLinesAsync();
-                return Page();
-            }
-
-            var entity = new FinancialDataInvoiceLine
-            {
-                Invoice_ID = LineInput.Invoice_ID,
-                Line_Number = LineInput.Line_Number,
-                Item_Code = LineInput.Item_Code,
-                Description = LineInput.Description!,
-                Quantity = LineInput.Quantity,
-                Unit_Price = LineInput.Unit_Price,
-                Tax_Amount = LineInput.Tax_Amount,
-                Created_At = DateTime.UtcNow,
-                Updated_At = DateTime.UtcNow,
-                Deleted_At = null
-            };
-
-            // compute subtotal and total server-side
-            entity.Line_Subtotal = Math.Round(entity.Quantity * entity.Unit_Price, 2);
-            entity.Line_Total = Math.Round(entity.Line_Subtotal + entity.Tax_Amount, 2);
-
-            _db.Set<FinancialDataInvoiceLine>().Add(entity);
-            await _db.SaveChangesAsync();
-
-            TempData["Message"] = "Invoice line added.";
-            return RedirectToPage(new { invoiceId = entity.Invoice_ID });
+            Invoices = await _db.Set<FinancialDataInvoice>().AsNoTracking()
+                .OrderByDescending(i => i.Invoice_Date).ToListAsync();
         }
 
-        // POST: Update existing line (LineInput must contain Line_ID)
-        public async Task<IActionResult> OnPostUpdateLineAsync()
+        private async Task LoadInvoiceLinesAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                await LoadLinesAsync();
-                return Page();
-            }
-
-            if (LineInput.Line_ID == 0)
-            {
-                TempData["Error"] = "Line ID missing for update.";
-                return RedirectToPage();
-            }
-
-            var existing = await _db.Set<FinancialDataInvoiceLine>().FindAsync(LineInput.Line_ID);
-            if (existing == null)
-            {
-                TempData["Error"] = "Invoice line not found.";
-                return RedirectToPage();
-            }
-
-            existing.Invoice_ID = LineInput.Invoice_ID;
-            existing.Line_Number = LineInput.Line_Number;
-            existing.Item_Code = LineInput.Item_Code;
-            existing.Description = LineInput.Description!;
-            existing.Quantity = LineInput.Quantity;
-            existing.Unit_Price = LineInput.Unit_Price;
-            existing.Tax_Amount = LineInput.Tax_Amount;
-            existing.Line_Subtotal = Math.Round(existing.Quantity * existing.Unit_Price, 2);
-            existing.Line_Total = Math.Round(existing.Line_Subtotal + existing.Tax_Amount, 2);
-            existing.Updated_At = DateTime.UtcNow;
-
-            _db.Set<FinancialDataInvoiceLine>().Update(existing);
-            await _db.SaveChangesAsync();
-
-            TempData["Message"] = "Invoice line updated.";
-            return RedirectToPage(new { invoiceId = existing.Invoice_ID });
+            InvoiceLines = await _db.Set<FinancialDataInvoiceLine>().AsNoTracking()
+                .OrderBy(l => l.Line_Number).ToListAsync();
         }
 
-        // POST: Delete a line by id
-        public async Task<IActionResult> OnPostDeleteLineAsync(int id)
+        private async Task LoadJournalsAsync()
         {
-            var existing = await _db.Set<FinancialDataInvoiceLine>().FindAsync(id);
-            if (existing != null)
-            {
-                // hard-delete; if you prefer soft-delete set Deleted_At
-                _db.Set<FinancialDataInvoiceLine>().Remove(existing);
-                await _db.SaveChangesAsync();
-                TempData["Message"] = "Invoice line deleted.";
-                return RedirectToPage(new { invoiceId = existing.Invoice_ID });
-            }
-
-            TempData["Error"] = "Invoice line not found.";
-            return RedirectToPage();
+            Journals = await _db.Set<FinancialDataJournal>().AsNoTracking()
+                .OrderByDescending(j => j.Journal_Date).ToListAsync();
         }
 
-        // Helper: load lines from DB into the Lines list
-        private async Task LoadLinesAsync()
+        private async Task LoadJournalLinesAsync()
         {
-            var q = _db.Set<FinancialDataInvoiceLine>().AsNoTracking().AsQueryable();
-            if (FilterInvoiceId.HasValue)
-                q = q.Where(x => x.Invoice_ID == FilterInvoiceId.Value);
-
-            Lines = await q.OrderBy(x => x.Line_ID).ToListAsync();
-            Lines = Lines ?? new List<FinancialDataInvoiceLine>();
+            JournalLines = await _db.Set<FinancialDataJournalLine>().AsNoTracking()
+                .OrderBy(jl => jl.Line_ID).ToListAsync();
         }
 
-        // Input DTO for binding form posts
-        public class FinancialLineInput
+        private async Task LoadPaymentsAsync()
         {
-            [Display(Name = "Line ID")]
-            public int Line_ID { get; set; } = 0;
+            Payments = await _db.Set<FinancialDataPayment>().AsNoTracking()
+                .OrderByDescending(p => p.Payment_Date).ToListAsync();
+        }
 
-            [Required]
-            [Display(Name = "Invoice ID")]
-            public int Invoice_ID { get; set; }
-
-            [Required]
-            [Display(Name = "Line Number")]
-            public int Line_Number { get; set; }
-
-            [StringLength(100)]
-            [Display(Name = "Item Code")]
-            public string? Item_Code { get; set; }
-
-            [Required]
-            [StringLength(500)]
-            [Display(Name = "Description")]
-            public string? Description { get; set; }
-
-            [Required]
-            [Range(0.01, 1000000000)]
-            [Display(Name = "Quantity")]
-            public decimal Quantity { get; set; } = 1.00m;
-
-            [Required]
-            [Range(0, 1000000000)]
-            [Display(Name = "Unit Price")]
-            public decimal Unit_Price { get; set; } = 0.0000m;
-
-            [Required]
-            [Range(0, 1000000000)]
-            [Display(Name = "Tax Amount")]
-            public decimal Tax_Amount { get; set; } = 0.00m;
+        // DTO
+        public class VendorOwingDto
+        {
+            public int Vendor_ID { get; set; }
+            public string Vendor_Name { get; set; } = string.Empty;
+            public decimal InvoicedTotal { get; set; }
+            public decimal PaidTotal { get; set; }
+            public decimal Outstanding { get; set; }
         }
     }
 }

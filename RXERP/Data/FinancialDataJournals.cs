@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RXERP.Data
 {
-    [Table("financial_journals")]
+    [Table("Finance_Journals")]
     [Index(nameof(Reference_ID), Name = "idx_fin_journals_reference")]
     public class FinancialDataJournal
     {
@@ -18,9 +18,8 @@ namespace RXERP.Data
         [Column("journal_type")]
         public string Journal_Type { get; set; } = null!;
 
-        [Required]
         [Column("reference_id")]
-        public int Reference_ID { get; set; }
+        public int? Reference_ID { get; set; }
 
         [MaxLength(50)]
         [Column("reference_type")]

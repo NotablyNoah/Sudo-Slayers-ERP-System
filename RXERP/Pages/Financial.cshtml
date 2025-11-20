@@ -1,398 +1,273 @@
 @page
 @model RXERP.Pages.FinancialModel
 @{
-    ViewData["Title"] = "Financial — Invoice Lines";
+    ViewData["Title"] = "Financial";
 }
 
-<div class="container">
-    <div class="row align-items-center mb-3">
-        <div class="col">
-            <h1 class="h3">Invoice Lines Manager</h1>
-            <p class="text-muted">Create and manage invoice lines for the latest invoices (client-side demo).</p>
+<div class="container my-4">
+    <h2>Financial Overview</h2>
+
+    <div class="row g-3 my-3">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Invoices</h6>
+                    <h3 class="card-title">@Model.InvoiceCount</h3>
+                    <small class="text-muted">Total invoiced: @Model.TotalInvoiced.ToString("C")</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Payments</h6>
+                    <h3 class="card-title">@Model.PaymentCount</h3>
+                    <small class="text-muted">Total revenue: @Model.TotalRevenue.ToString("C")</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Outstanding</h6>
+                    <h3 class="card-title">@Model.Outstanding.ToString("C")</h3>
+                    <small class="text-muted">Invoices - Payments</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Vendors Owing</h6>
+                    <h3 class="card-title">@Model.VendorsOwing.Count</h3>
+                    <small class="text-muted">Vendors with outstanding balances</small>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Summary cards (Invoice Lines) -->
-    <section class="d-flex flex-wrap gap-3 mb-4" aria-label="Invoice Line Summary">
-        <div class="card p-3" style="min-width:170px;">
-            <div class="h4 mb-0" id="card-lines-count">0</div>
-            <small class="text-muted">Lines</small>
+    <div class="mb-3">
+        <label class="form-label">Show table</label>
+        <div class="btn-group" role="group" aria-label="tables">
+            <button type="button" class="btn btn-outline-secondary table-toggle" data-target="#table-invoices">Invoices</button>
+            <button type="button" class="btn btn-outline-secondary table-toggle" data-target="#table-invoicelines">Invoice Lines</button>
+            <button type="button" class="btn btn-outline-secondary table-toggle" data-target="#table-payments">Payments</button>
+            <button type="button" class="btn btn-outline-secondary table-toggle" data-target="#table-journals">Journals</button>
+            <button type="button" class="btn btn-outline-secondary table-toggle" data-target="#table-journallines">Journal Lines</button>
+            <button type="button" class="btn btn-outline-secondary table-toggle" data-target="#table-vendorsowing">Vendors Owing</button>
         </div>
-        <div class="card p-3" style="min-width:170px;">
-            <div class="h4 mb-0" id="card-subtotal-total">0.00</div>
-            <small class="text-muted">Subtotal</small>
-        </div>
-        <div class="card p-3" style="min-width:170px;">
-            <div class="h4 mb-0" id="card-tax-total">0.00</div>
-            <small class="text-muted">Tax Total</small>
-        </div>
-        <div class="card p-3" style="min-width:170px;">
-            <div class="h4 mb-0" id="card-grand-total">0.00</div>
-            <small class="text-muted">Grand Total</small>
-        </div>
-    </section>
+    </div>
 
-    <!-- Toolbar: filter by invoice id -->
-    <section class="card mb-4 p-3">
-        <form id="filter-form" class="row g-2 align-items-end" onsubmit="return false;">
-            <div class="col-auto">
-                <label for="filter-invoice-id" class="form-label">Filter Invoice ID</label>
-                <input id="filter-invoice-id" class="form-control" type="number" min="0" placeholder="Invoice ID or blank = all" />
-            </div>
-            <div class="col-auto">
-                <button id="apply-filter" class="btn btn-primary">Apply</button>
-            </div>
-            <div class="col-auto ms-auto">
-                <button id="reset-filter" class="btn btn-outline-secondary">Reset</button>
-            </div>
-        </form>
-    </section>
-
-    <!-- Invoice Line form -->
-    <section class="card mb-4 p-3">
-        <h5 class="mb-3">Add / Edit Line</h5>
-
-        <form id="line-form" class="row g-2 align-items-end" onsubmit="return false;" novalidate>
-            <input id="line_id" type="hidden" />
-
-            <div class="col-md-2">
-                <label for="invoice_id" class="form-label">Invoice ID</label>
-                <input id="invoice_id" name="invoice_id" type="number" class="form-control" placeholder="Invoice ID" required />
-                <div class="invalid-feedback">Invoice ID is required.</div>
-            </div>
-
-            <div class="col-md-1">
-                <label for="line_number" class="form-label">Line #</label>
-                <input id="line_number" name="line_number" type="number" class="form-control" placeholder="1" min="1" required />
-                <div class="invalid-feedback">Line number required.</div>
-            </div>
-
-            <div class="col-md-2">
-                <label for="item_code" class="form-label">Item Code</label>
-                <input id="item_code" name="item_code" type="text" class="form-control" placeholder="SKU or GL code (optional)" />
-            </div>
-
-            <div class="col-md-4">
-                <label for="description" class="form-label">Description</label>
-                <input id="description" name="description" type="text" class="form-control" placeholder="Description (required)" required />
-                <div class="invalid-feedback">Description is required.</div>
-            </div>
-
-            <div class="col-md-1">
-                <label for="quantity" class="form-label">Qty</label>
-                <input id="quantity" name="quantity" type="number" step="0.01" min="0.01" class="form-control" value="1.00" required />
-                <div class="invalid-feedback">Quantity required.</div>
-            </div>
-
-            <div class="col-md-1">
-                <label for="unit_price" class="form-label">Unit Price</label>
-                <input id="unit_price" name="unit_price" type="number" step="0.0001" min="0" class="form-control" value="0.0000" required />
-                <div class="invalid-feedback">Unit price required.</div>
-            </div>
-
-            <div class="col-md-1">
-                <label for="tax_amount" class="form-label">Tax</label>
-                <input id="tax_amount" name="tax_amount" type="number" step="0.01" min="0" class="form-control" value="0.00" />
-            </div>
-
-            <div class="col-12 mt-2">
-                <button id="add-line" class="btn btn-success">Add Line</button>
-                <button id="update-line" class="btn btn-primary d-none">Update Line</button>
-                <button id="clear-line" class="btn btn-secondary">Clear</button>
-            </div>
-        </form>
-    </section>
-
-    <!-- Invoice Lines table -->
-    <section class="card mb-4 p-3">
-        <h5 class="mb-3">Invoice Lines</h5>
-
-        <div class="table-responsive">
-            <table id="lines-table" class="table table-bordered table-striped">
-                <thead class="table-light">
+    <!-- Tables (all hidden until selected) -->
+    <div id="table-invoices" class="table-pane d-none">
+        <h4>Invoices</h4>
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Number</th>
+                    <th>Date</th>
+                    <th>Due</th>
+                    <th>Vendor</th>
+                    <th>Subtotal</th>
+                    <th>Tax</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                    <th>Deleted</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var i in Model.Invoices)
+                {
                     <tr>
-                        <th>#</th>
-                        <th>Line ID</th>
-                        <th>Invoice ID</th>
-                        <th>Line #</th>
-                        <th>Item Code</th>
-                        <th>Description</th>
-                        <th class="text-end">Qty</th>
-                        <th class="text-end">Unit Price</th>
-                        <th class="text-end">Subtotal</th>
-                        <th class="text-end">Tax</th>
-                        <th class="text-end">Total</th>
-                        <th>Created</th>
-                        <th>Updated</th>
-                        <th>Actions</th>
+                        <td>@i.Invoice_ID</td>
+                        <td>@i.Invoice_Number</td>
+                        <td>@i.Invoice_Date.ToString("yyyy-MM-dd")</td>
+                        <td>@(i.Due_Date.HasValue ? i.Due_Date.Value.ToString("yyyy-MM-dd") : "")</td>
+                        <td>@i.Vendor_ID</td>
+                        <td>@i.Subtotal.ToString("C")</td>
+                        <td>@i.Tax_Amount.ToString("C")</td>
+                        <td>@i.Total_Amount.ToString("C")</td>
+                        <td>@i.Status</td>
+                        <td>@i.Created_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@i.Updated_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@(i.Deleted_At.HasValue ? i.Deleted_At.Value.ToString("yyyy-MM-dd HH:mm:ss") : "")</td>
                     </tr>
-                </thead>
-                <tbody></tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="8" class="text-end">Totals:</th>
-                        <th class="text-end" id="total-sub">0.00</th>
-                        <th class="text-end" id="total-tax">0.00</th>
-                        <th class="text-end" id="total-grand">0.00</th>
-                        <th colspan="3"></th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </section>
+                }
+            </tbody>
+        </table>
+    </div>
 
-    <div class="text-muted small">This is a client-side manager for the `Finance_Invoice_Lines` table. Wire server handlers to persist data when ready.</div>
+    <div id="table-invoicelines" class="table-pane d-none">
+        <h4>Invoice Lines</h4>
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>Line ID</th>
+                    <th>Invoice ID</th>
+                    <th>Line #</th>
+                    <th>Item Code</th>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Subtotal</th>
+                    <th>Tax</th>
+                    <th>Line Total</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                    <th>Deleted</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var l in Model.InvoiceLines)
+                {
+                    <tr>
+                        <td>@l.Line_ID</td>
+                        <td>@l.Invoice_ID</td>
+                        <td>@l.Line_Number</td>
+                        <td>@(string.IsNullOrEmpty(l.Item_Code) ? "" : l.Item_Code)</td>
+                        <td>@l.Description</td>
+                        <td>@l.Quantity.ToString("0.##")</td>
+                        <td>@l.Unit_Price.ToString("C")</td>
+                        <td>@l.Line_Subtotal.ToString("C")</td>
+                        <td>@l.Tax_Amount.ToString("C")</td>
+                        <td>@l.Line_Total.ToString("C")</td>
+                        <td>@l.Created_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@l.Updated_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@(l.Deleted_At.HasValue ? l.Deleted_At.Value.ToString("yyyy-MM-dd HH:mm:ss") : "")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="table-payments" class="table-pane d-none">
+        <h4>Payments</h4>
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Vendor</th>
+                    <th>Method</th>
+                    <th>Reference</th>
+                    <th>Amount</th>
+                    <th>Notes</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                    <th>Deleted</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Payments)
+                {
+                    <tr>
+                        <td>@p.Payment_ID</td>
+                        <td>@p.Payment_Date.ToString("yyyy-MM-dd")</td>
+                        <td>@p.Vendor_ID</td>
+                        <td>@p.Payment_Method</td>
+                        <td>@(string.IsNullOrEmpty(p.Reference_Number) ? "" : p.Reference_Number)</td>
+                        <td>@p.Amount_Total.ToString("C")</td>
+                        <td>@(string.IsNullOrEmpty(p.Notes) ? "" : p.Notes)</td>
+                        <td>@p.Created_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@p.Updated_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@(p.Deleted_At.HasValue ? p.Deleted_At.Value.ToString("yyyy-MM-dd HH:mm:ss") : "")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="table-journals" class="table-pane d-none">
+        <h4>Journals</h4>
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Reference ID</th>
+                    <th>Reference Type</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                    <th>Deleted</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var j in Model.Journals)
+                {
+                    <tr>
+                        <td>@j.Journal_ID</td>
+                        <td>@j.Journal_Type</td>
+                        <td>@j.Reference_ID</td>
+                        <td>@(string.IsNullOrEmpty(j.Reference_Type) ? "" : j.Reference_Type)</td>
+                        <td>@j.Journal_Date.ToString("yyyy-MM-dd")</td>
+                        <td>@j.Description</td>
+                        <td>@j.Created_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@j.Updated_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@(j.Deleted_At.HasValue ? j.Deleted_At.Value.ToString("yyyy-MM-dd HH:mm:ss") : "")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="table-journallines" class="table-pane d-none">
+    <h4>Journal Lines</h4>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Line ID</th>
+                <th>Journal ID</th>
+                <th>Account Code</th>
+                <th>Description</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var jl in Model.JournalLines)
+            {
+                <tr>
+                    <td>@jl.Line_ID</td>
+                    <td>@jl.Journal_ID</td>
+                    <td>@(string.IsNullOrEmpty(jl.Account_Code) ? "" : jl.Account_Code)</td>
+                    <td>@jl.Description</td>
+                    <td>@jl.Debit.ToString("C")</td>
+                    <td>@jl.Credit.ToString("C")</td>
+                    <td>@jl.Created_At.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-
     <script>
         (function () {
-            'use strict';
-
-            // Elements
-            const form = document.getElementById('line-form');
-            const addBtn = document.getElementById('add-line');
-            const updateBtn = document.getElementById('update-line');
-            const clearBtn = document.getElementById('clear-line');
-            const tableBody = document.querySelector('#lines-table tbody');
-            const totalSubEl = document.getElementById('total-sub');
-            const totalTaxEl = document.getElementById('total-tax');
-            const totalGrandEl = document.getElementById('total-grand');
-            const cardLinesCount = document.getElementById('card-lines-count');
-            const cardSubTotal = document.getElementById('card-subtotal-total');
-            const cardTaxTotal = document.getElementById('card-tax-total');
-            const cardGrandTotal = document.getElementById('card-grand-total');
-
-            const filterInvoiceId = document.getElementById('filter-invoice-id');
-            const applyFilterBtn = document.getElementById('apply-filter');
-            const resetFilterBtn = document.getElementById('reset-filter');
-
-            let lines = []; // in-browser array of lines
-            let editingIndex = -1;
-            let nextLineId = 1;
-
-            function parseNumber(v, decimals = 2) {
-                const n = Number(v);
-                if (Number.isNaN(n)) return 0;
-                return Number(Number(n).toFixed(decimals));
+            const toggles = document.querySelectorAll('.table-toggle');
+            function hideAll() {
+                document.querySelectorAll('.table-pane').forEach(el => el.classList.add('d-none'));
             }
-
-            function calcLineValues(qty, price, tax) {
-                const subtotal = parseNumber(qty * price, 2);
-                const taxAmount = parseNumber(tax, 2);
-                const total = parseNumber(subtotal + taxAmount, 2);
-                return { subtotal, taxAmount, total };
-            }
-
-            function refreshTable(filteredInvoiceId = null) {
-                tableBody.innerHTML = '';
-                let totalSub = 0, totalTax = 0, totalGrand = 0;
-                const visible = filteredInvoiceId ? lines.filter(l => l.invoice_id === filteredInvoiceId) : lines;
-
-                visible.forEach((line, idx) => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${idx + 1}</td>
-                        <td>${line.line_id}</td>
-                        <td>${line.invoice_id}</td>
-                        <td>${line.line_number}</td>
-                        <td>${escapeHtml(line.item_code || '')}</td>
-                        <td>${escapeHtml(line.description)}</td>
-                        <td class="text-end">${line.quantity.toFixed(2)}</td>
-                        <td class="text-end">${line.unit_price.toFixed(4)}</td>
-                        <td class="text-end">${line.line_subtotal.toFixed(2)}</td>
-                        <td class="text-end">${line.tax_amount.toFixed(2)}</td>
-                        <td class="text-end">${line.line_total.toFixed(2)}</td>
-                        <td>${formatDate(line.created_at)}</td>
-                        <td>${formatDate(line.updated_at)}</td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${line.line_id}">Edit</button>
-                            <button class="btn btn-sm btn-outline-danger btn-del ms-1" data-id="${line.line_id}">Delete</button>
-                        </td>
-                    `;
-                    tableBody.appendChild(tr);
-
-                    totalSub += line.line_subtotal;
-                    totalTax += line.tax_amount;
-                    totalGrand += line.line_total;
-                });
-
-                totalSubEl.textContent = totalSub.toFixed(2);
-                totalTaxEl.textContent = totalTax.toFixed(2);
-                totalGrandEl.textContent = totalGrand.toFixed(2);
-
-                cardLinesCount.textContent = visible.length;
-                cardSubTotal.textContent = totalSub.toFixed(2);
-                cardTaxTotal.textContent = totalTax.toFixed(2);
-                cardGrandTotal.textContent = totalGrand.toFixed(2);
-
-                // wire edit/delete handlers
-                tableBody.querySelectorAll('.btn-edit').forEach(b => b.addEventListener('click', e => {
-                    const id = Number(e.currentTarget.dataset.id);
-                    startEditById(id);
-                }));
-                tableBody.querySelectorAll('.btn-del').forEach(b => b.addEventListener('click', e => {
-                    const id = Number(e.currentTarget.dataset.id);
-                    if (confirm('Delete this line?')) {
-                        const idx = lines.findIndex(x => x.line_id === id);
-                        if (idx >= 0) {
-                            lines.splice(idx, 1);
-                            refreshTable(filteredInvoiceId);
-                        }
+            toggles.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    hideAll();
+                    const target = document.querySelector(this.getAttribute('data-target'));
+                    if (target) {
+                        target.classList.remove('d-none');
+                        // scroll to the table for convenience
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
-                }));
-            }
-
-            function readForm() {
-                return {
-                    line_id: Number(document.getElementById('line_id').value || 0),
-                    invoice_id: Number(document.getElementById('invoice_id').value || 0),
-                    line_number: Number(document.getElementById('line_number').value || 0),
-                    item_code: document.getElementById('item_code').value.trim() || null,
-                    description: document.getElementById('description').value.trim(),
-                    quantity: parseNumber(document.getElementById('quantity').value || 0, 2),
-                    unit_price: parseNumber(document.getElementById('unit_price').value || 0, 4),
-                    tax_amount: parseNumber(document.getElementById('tax_amount').value || 0, 2)
-                };
-            }
-
-            function populateForm(line) {
-                document.getElementById('line_id').value = line.line_id;
-                document.getElementById('invoice_id').value = line.invoice_id;
-                document.getElementById('line_number').value = line.line_number;
-                document.getElementById('item_code').value = line.item_code || '';
-                document.getElementById('description').value = line.description;
-                document.getElementById('quantity').value = line.quantity.toFixed(2);
-                document.getElementById('unit_price').value = line.unit_price.toFixed(4);
-                document.getElementById('tax_amount').value = line.tax_amount.toFixed(2);
-            }
-
-            function clearForm() {
-                form.reset();
-                document.getElementById('line_id').value = '';
-                document.getElementById('quantity').value = '1.00';
-                document.getElementById('unit_price').value = '0.0000';
-                document.getElementById('tax_amount').value = '0.00';
-                editingIndex = -1;
-                addBtn.classList.remove('d-none');
-                updateBtn.classList.add('d-none');
-                form.classList.remove('was-validated');
-            }
-
-            function startEditById(id) {
-                editingIndex = lines.findIndex(x => x.line_id === id);
-                if (editingIndex < 0) return;
-                const line = lines[editingIndex];
-                populateForm(line);
-                addBtn.classList.add('d-none');
-                updateBtn.classList.remove('d-none');
-            }
-
-            addBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (!form.checkValidity()) {
-                    form.classList.add('was-validated');
-                    return;
-                }
-
-                const data = readForm();
-                const calc = calcLineValues(data.quantity, data.unit_price, data.tax_amount);
-
-                const now = new Date();
-                const line = {
-                    line_id: nextLineId++,
-                    invoice_id: data.invoice_id,
-                    line_number: data.line_number,
-                    item_code: data.item_code,
-                    description: data.description,
-                    quantity: data.quantity,
-                    unit_price: data.unit_price,
-                    line_subtotal: calc.subtotal,
-                    tax_amount: calc.taxAmount,
-                    line_total: calc.total,
-                    created_at: now,
-                    updated_at: now,
-                    deleted_at: null
-                };
-
-                lines.push(line);
-                refreshTable(Number(filterInvoiceId.value) || null);
-                clearForm();
+                });
             });
-
-            updateBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (editingIndex < 0) return;
-                if (!form.checkValidity()) {
-                    form.classList.add('was-validated');
-                    return;
-                }
-
-                const data = readForm();
-                const calc = calcLineValues(data.quantity, data.unit_price, data.tax_amount);
-                const now = new Date();
-
-                lines[editingIndex] = {
-                    ...lines[editingIndex],
-                    invoice_id: data.invoice_id,
-                    line_number: data.line_number,
-                    item_code: data.item_code,
-                    description: data.description,
-                    quantity: data.quantity,
-                    unit_price: data.unit_price,
-                    line_subtotal: calc.subtotal,
-                    tax_amount: calc.tax_amount,
-                    line_total: calc.total,
-                    updated_at: now
-                };
-
-                refreshTable(Number(filterInvoiceId.value) || null);
-                clearForm();
-            });
-
-            clearBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                clearForm();
-            });
-
-            applyFilterBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const v = Number(filterInvoiceId.value || 0) || null;
-                refreshTable(v);
-            });
-
-            resetFilterBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                filterInvoiceId.value = '';
-                refreshTable(null);
-            });
-
-            // small helpers
-            function escapeHtml(unsafe) {
-                return unsafe
-                    .replaceAll('&', '&amp;')
-                    .replaceAll('<', '&lt;')
-                    .replaceAll('>', '&gt;')
-                    .replaceAll('"', '&quot;')
-                    .replaceAll("'", '&#039;');
-            }
-
-            function pad(n) {
-                return n < 10 ? '0' + n : n;
-            }
-
-            function formatDate(d) {
-                if (!d) return '';
-                const dt = new Date(d);
-                return dt.getFullYear() + '-' + pad(dt.getMonth() + 1) + '-' + pad(dt.getDate()) + ' ' + pad(dt.getHours()) + ':' + pad(dt.getMinutes());
-            }
-
-            // start empty
-            clearForm();
-            refreshTable(null);
-
         })();
     </script>
 }
