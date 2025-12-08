@@ -38,5 +38,6 @@ namespace RXERP.Data // namespace declaration to match file path
         public DbSet<FinancialDataTaxRate> FinancialDataTaxRates { get; set; }
 
         public DbSet<CRMData> CRMData { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
     }
 }
